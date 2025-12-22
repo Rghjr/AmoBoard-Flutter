@@ -10,13 +10,43 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
+  flutter_launcher_icons: ^0.14.4
   device_preview: ^1.1.0
+  permission_handler: ^12.0.1
+  image_picker: ^1.2.1
+  path_provider: ^2.0.14
+  path: ^1.8.3
+  file_picker: ^10.3.7
+  flutter_colorpicker: ^1.1.0
+  shared_preferences: ^2.1.0
+  audioplayers: ^6.0.0
+  reorderables: ^0.6.0
+  flutter_reorderable_grid_view: ^5.5.2
+  just_audio: ^0.9.38
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/Amogus_Logo_Apki.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/1024.png"
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/menu_buttons.json
+    - assets/Megafon_Na_Czerwonym.png
+    - assets/xd.png
+    - assets/sounds/
+    - assets/sound_icons/
+    - assets/earrape_icon.png
+    - assets/sadCat.png
+    - assets/Amogus_Logo_Apki.png
+    - assets/Amongus_Logo_W_Apce.png

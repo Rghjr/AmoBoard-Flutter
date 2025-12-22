@@ -1,0 +1,43 @@
+[
+  {
+    "id": 0,
+    "text": "Stylowy",
+    "icon": "assets/Megafon_Na_Czerwonym.png",
+    "gridColumns": 2,
+    "backgroundColor": "#000000",
+    "borderColor": "#7A30FF",
+    "textColor": "#FFFFFF",
+    "sounds": [
+      {
+        "id": 0,
+        "label": "Smutny Kot",
+        "iconPath": "assets/sadCat.png",
+        "soundPath": "assets/sounds/sad-meow-song.mp3",
+        "volume": 1.0,
+        "borderColor": "#7A30FF",
+        "backgroundColor": "#000000",
+        "textSize": 16
+      },
+      {
+        "id": 1,
+        "label": "Cygun",
+        "iconPath": "assets/sound_icons/Cygun.jpg",
+        "soundPath": "assets/sounds/Cygan.mp3",
+        "volume": 1.0,
+        "borderColor": "#7A30FF",
+        "backgroundColor": "#000000",
+        "textSize": 16
+      },
+      {
+        "id": 2,
+        "label": "Tranziol",
+        "iconPath": "assets/sound_icons/Tranziol.jpg",
+        "soundPath": "assets/sounds/Bartko_Kurwa.mp3",
+        "volume": 1.0,
+        "borderColor": "#7A30FF",
+        "backgroundColor": "#000000",
+        "textSize": 16
+      }
+    ]
+  }
+]
