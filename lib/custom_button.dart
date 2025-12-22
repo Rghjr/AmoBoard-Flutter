@@ -1,22 +1,29 @@
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 
-/// Custom button widget with icon (asset or file), text, and tap/long press
+/// A reusable, stylable button widget that displays an icon and a centered label.
+/// - Supports tap and optional long-press callbacks.
+/// - Loads icon either from assets (when path starts with "assets/") or device file path.
+/// - Exposes customization for size, colors, borders, and typography.
 class CustomButton extends StatelessWidget {
-  final int id; // button id, useful for tracking
-  final String text; // text label
-  final String icon; // path to icon, can be asset or file
-  final VoidCallback onPressed; // tap callback
-  final VoidCallback? onLongPress; // optional long press callback
+  final int id;                 // unique identifier (used by parent lists)
+  final String text;            // button label
+  final String icon;            // path to icon (asset or file)
+  final VoidCallback onPressed; // tap handler
+  final VoidCallback? onLongPress; // optional long-press handler
 
-  final double height; // button height
-  final double width; // button width
-  final Color backgroundColor; // button background
-  final Color borderColor; // border color
-  final Color textColor; // text color
-  final double borderRadius; // button corners
-  final double iconRadius; // icon corners
-  final double fontSize; // text size
+  // Layout sizing
+  final double height;
+  final double width;
+
+  // Visual styling
+  final Color backgroundColor;
+  final Color borderColor;
+  final Color textColor;
+  final double borderRadius;
+  final double iconRadius;
+  final double fontSize;
 
   const CustomButton({
     super.key,
@@ -35,8 +42,11 @@ class CustomButton extends StatelessWidget {
     this.fontSize = 18,
   });
 
-  /// Builds the icon widget depending on whether it's an asset or file
+  /// Builds the icon image:
+  /// - If path starts with "assets/", loads from app assets.
+  /// - Otherwise, treats it as a device file path and loads via [Image.file].
   Widget _buildIcon() {
+    // If the path points to an asset — load asset image
     if (icon.startsWith("assets/")) {
       return Image.asset(
         icon,
@@ -45,6 +55,7 @@ class CustomButton extends StatelessWidget {
         fit: BoxFit.cover,
       );
     }
+    // Otherwise, load an image file from device storage
     return Image.file(
       File(icon),
       height: 60,
@@ -56,13 +67,14 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: Colors.transparent, // let parent/container control background where needed
       child: InkWell(
         borderRadius: BorderRadius.circular(borderRadius),
-        onTap: onPressed, // call onPressed on tap
-        onLongPress: onLongPress, // call onLongPress if provided
-        splashColor: borderColor.withAlpha((255 * 0.3).round()), // ripple effect
-        highlightColor: borderColor.withAlpha((255 * 0.1).round()), // highlight effect
+        onTap: onPressed,
+        onLongPress: onLongPress,
+        // Ripple & highlight colors derived from borderColor for visual consistency
+        splashColor: borderColor.withAlpha((255 * 0.3).round()),
+        highlightColor: borderColor.withAlpha((255 * 0.1).round()),
         child: Container(
           height: height,
           width: width,
@@ -74,11 +86,13 @@ class CustomButton extends StatelessWidget {
           ),
           child: Row(
             children: [
+              // Icon preview with rounded corners
               ClipRRect(
                 borderRadius: BorderRadius.circular(iconRadius),
                 child: _buildIcon(),
               ),
               const SizedBox(width: 8),
+              // Centered text that expands to fill remaining horizontal space
               Expanded(
                 child: Center(
                   child: Text(
