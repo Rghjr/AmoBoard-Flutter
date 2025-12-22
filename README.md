@@ -68,17 +68,34 @@ Make sure you run the app on a real device or emulator with audio support.
 
 ## 📸 Screenshots
 
-(To be added)
+### App Logo
+![App Logo](screenshots/android_logo.jpg)
+
+### Main Menu
+![Main Menu](screenshots/menu.jpg)  
+The main menu displays the top icon and soundboard panels. Panels can be opened and edited by long-pressing, and new panels can be added via the plus button.
+
+### Add New Soundboard Page
+![Add New Soundboard](screenshots/dodaj_nowy_przycisk.jpg)  
+This page allows editing the panel's name, background color, border, text style, number of columns, and changing the icon by tapping on it.
+
+### Soundboard Page
+![Soundboard Page](screenshots/dodaj_nowy_przycisk_do_panelu.jpg)  
+The soundboard panel includes a central **Earrape** toggle button at the top, a back button and title on the left, stop button on the right, drag & drop button for reordering, and a plus button to add new sounds. Below are the sound buttons, which can be tapped or long-pressed for editing.
+
+### Edit Sound
+![Edit Sound](screenshots/edycja_dzwieku.jpg)  
+This screen allows editing a specific sound: change the icon, name, background color, border, text style and size, volume, and select an audio file.
 
 ---
 
 ## 👤 Author
 
 Krystian Strzępek  
-Flutter / Mobile Developer
 
 ---
 
 ## 📄 License
 
-This project is for educational and portfolio purposes.
+This project is for **educational purposes** and **portfolio use only**.  
+All assets and code are owned by the author and cannot be used commercially without permission.
