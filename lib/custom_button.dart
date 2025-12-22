@@ -1,16 +1,23 @@
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 
+/// A reusable, stylable button widget that displays an icon and a centered label.
+/// - Supports tap and optional long-press callbacks.
+/// - Loads icon either from assets (when path starts with "assets/") or device file path.
+/// - Exposes customization for size, colors, borders, and typography.
 class CustomButton extends StatelessWidget {
-  final int id;
-  final String text;
-  final String icon;
-  final VoidCallback onPressed;
-  final VoidCallback? onLongPress;
+  final int id;                 // unique identifier (used by parent lists)
+  final String text;            // button label
+  final String icon;            // path to icon (asset or file)
+  final VoidCallback onPressed; // tap handler
+  final VoidCallback? onLongPress; // optional long-press handler
 
+  // Layout sizing
   final double height;
   final double width;
 
+  // Visual styling
   final Color backgroundColor;
   final Color borderColor;
   final Color textColor;
@@ -35,8 +42,11 @@ class CustomButton extends StatelessWidget {
     this.fontSize = 18,
   });
 
+  /// Builds the icon image:
+  /// - If path starts with "assets/", loads from app assets.
+  /// - Otherwise, treats it as a device file path and loads via [Image.file].
   Widget _buildIcon() {
-    // jeśli ścieżka zaczyna się od assets – ładujemy asseta
+    // If the path points to an asset — load asset image
     if (icon.startsWith("assets/")) {
       return Image.asset(
         icon,
@@ -45,7 +55,7 @@ class CustomButton extends StatelessWidget {
         fit: BoxFit.cover,
       );
     }
-    // w innym przypadku ładujemy plik z urządzenia
+    // Otherwise, load an image file from device storage
     return Image.file(
       File(icon),
       height: 60,
@@ -57,11 +67,12 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: Colors.transparent, // let parent/container control background where needed
       child: InkWell(
         borderRadius: BorderRadius.circular(borderRadius),
         onTap: onPressed,
         onLongPress: onLongPress,
+        // Ripple & highlight colors derived from borderColor for visual consistency
         splashColor: borderColor.withAlpha((255 * 0.3).round()),
         highlightColor: borderColor.withAlpha((255 * 0.1).round()),
         child: Container(
@@ -75,11 +86,13 @@ class CustomButton extends StatelessWidget {
           ),
           child: Row(
             children: [
+              // Icon preview with rounded corners
               ClipRRect(
                 borderRadius: BorderRadius.circular(iconRadius),
                 child: _buildIcon(),
               ),
               const SizedBox(width: 8),
+              // Centered text that expands to fill remaining horizontal space
               Expanded(
                 child: Center(
                   child: Text(

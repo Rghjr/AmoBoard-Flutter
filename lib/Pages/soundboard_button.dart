@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -6,16 +7,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'sound_engine.dart';
 
-
-
+/// A stateful button widget used inside the soundboard.
+/// It renders an icon + label and supports tap (play) and long-press (edit).
 class SoundboardButton extends StatefulWidget {
-  final Map<String, dynamic> data;
-  final double borderRadius;
-  final double fontSize;
-  final Function(Map<String, dynamic>) onUpdate;
-  final VoidCallback onDelete;
-  final bool interactionsEnabled;
-
+  final Map<String, dynamic> data;            // configuration map for this button
+  final double borderRadius;                  // corner radius for visuals
+  final double fontSize;                      // default font size for label
+  final Function(Map<String, dynamic>) onUpdate; // callback when user saves edits
+  final VoidCallback onDelete;                // callback when user deletes this button
+  final bool interactionsEnabled;             // enable/disable tap/long-press
 
   const SoundboardButton({
     super.key,
@@ -32,6 +32,8 @@ class SoundboardButton extends StatefulWidget {
 }
 
 class _SoundboardButtonState extends State<SoundboardButton> {
+  /// Plays the assigned sound using [SoundEngine].
+  /// Shows a short snackbar with the label, or an error if no sound is set.
   void _playSound() {
     final path = widget.data['soundPath'];
 
@@ -39,7 +41,7 @@ class _SoundboardButtonState extends State<SoundboardButton> {
       SoundEngine().play(
         path: path,
         volume: (widget.data['volume'] != null ? (widget.data['volume'] as num).toDouble() : 1.0),
-        
+        // volume range respected by SoundEngine (0.0–2.0 nominal, up to 4.0 with earrape)
       );
       debugPrint("Playing sound: $path");
       ScaffoldMessenger.of(context).showSnackBar(
@@ -52,11 +54,13 @@ class _SoundboardButtonState extends State<SoundboardButton> {
     }
   }
 
+  /// Opens an overlay editor (blurred backdrop) to edit the button's settings.
+  /// Uses a transparent route and stacks the overlay widget over the current page.
   void _showEditor() {
     Navigator.of(context).push(PageRouteBuilder(
       opaque: false,
       barrierDismissible: true,
-      barrierColor: Colors.transparent, // 👈 WAŻNE
+      barrierColor: Colors.transparent, // important: click-through translucent barrier
       pageBuilder: (context, animation, secondaryAnimation) {
         return Stack(
           children: [
@@ -79,6 +83,7 @@ class _SoundboardButtonState extends State<SoundboardButton> {
 
   @override
   Widget build(BuildContext context) {
+    // Resolve colors and presentation values from data map (with safe defaults)
     Color borderColor = colorFromHex(widget.data['borderColor'], Colors.deepPurpleAccent);
     Color backgroundColor = colorFromHex(widget.data['backgroundColor'], Colors.black);
     Color textColor = colorFromHex(widget.data['textColor'], Colors.white);
@@ -105,11 +110,13 @@ class _SoundboardButtonState extends State<SoundboardButton> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Top area: icon preview (asset or file)
             Expanded(
               flex: 3,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Hero(
+                  // Hero tag includes timestamp to avoid tag collisions across rebuilds
                   tag: 'sound_icon_${widget.data['id']}_${DateTime.now().millisecondsSinceEpoch}',
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(widget.borderRadius / 1.5),
@@ -120,6 +127,7 @@ class _SoundboardButtonState extends State<SoundboardButton> {
                 ),
               ),
             ),
+            // Bottom area: label text
             Expanded(
               flex: 1,
               child: Padding(
@@ -144,10 +152,11 @@ class _SoundboardButtonState extends State<SoundboardButton> {
   }
 }
 
+/// Overlay widget used to edit the sound button settings (icon, label, colors, volume, etc.).
 class _SoundEditorOverlay extends StatefulWidget {
-  final Map<String, dynamic> data;
-  final Function(Map<String, dynamic>) onSave;
-  final VoidCallback onDelete;
+  final Map<String, dynamic> data;                 // initial data to edit
+  final Function(Map<String, dynamic>) onSave;     // callback with updated map
+  final VoidCallback onDelete;                     // delete action callback
 
   const _SoundEditorOverlay({required this.data, required this.onSave, required this.onDelete});
 
@@ -156,6 +165,7 @@ class _SoundEditorOverlay extends StatefulWidget {
 }
 
 class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
+  // Local editable state for the overlay inputs
   late TextEditingController _nameController;
   late String _currentIconPath;
   late String _currentSoundPath;
@@ -168,6 +178,7 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
   @override
   void initState() {
     super.initState();
+    // Initialize with values from incoming data or sensible defaults
     _nameController = TextEditingController(text: widget.data['label']);
     _currentIconPath = widget.data['iconPath'] ?? 'assets/xd.png';
     _currentSoundPath = widget.data['soundPath'] ?? '';
@@ -178,6 +189,7 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
     _textSize = widget.data['textSize'] != null ? (widget.data['textSize'] as num).toDouble() : 16.0;
   }
 
+  /// Pick an image from gallery and update the icon path.
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -188,6 +200,8 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
     }
   }
 
+  /// Pick an MP3 file using `file_picker` and update the sound path.
+  /// Shows a small snackbar with the selected file name.
   Future<void> _pickSound() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -209,10 +223,11 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
         );
       }
     } else {
-      // anulowane – wyjebane, nic nie robimy
+      // canceled -> do nothing
     }
   }
 
+  /// Collect current overlay values, merge into original map, call [onSave], and close.
   void _save() {
     final updated = Map<String, dynamic>.from(widget.data);
     updated['label'] = _nameController.text;
@@ -228,9 +243,9 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
     Navigator.of(context).pop();
   }
 
-
   @override
   Widget build(BuildContext context) {
+    // Decide if icon path refers to an asset or a file on device storage
     bool isAsset = !(_currentIconPath.startsWith('/') || _currentIconPath.contains('storage'));
 
     return Center(
@@ -249,6 +264,7 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
             children: [
               const Text("Edytuj Dźwięk", style: TextStyle(color: Colors.white, fontSize: 20)),
               const SizedBox(height: 15),
+              // Icon chooser (tap to change image)
               GestureDetector(
                 onTap: _pickImage,
                 child: Container(
@@ -261,6 +277,7 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
               ),
               const Text("Kliknij obrazek by zmienić", style: TextStyle(color: Colors.grey, fontSize: 10)),
               const SizedBox(height: 15),
+              // Label input
               TextField(
                 controller: _nameController,
                 style: const TextStyle(color: Colors.white),
@@ -273,13 +290,13 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
               ),
               const SizedBox(height: 12),
 
-              // Background color picker
+              // Background color picker (preset swatches)
               Align(alignment: Alignment.centerLeft, child: Text("Kolor tła", style: TextStyle(color: Colors.white))),
               const SizedBox(height: 6),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                    children: [
+                  children: [
                     Color(0xFF000000),
                     Color.fromARGB(255, 231, 166, 0),
                     Color.fromARGB(255, 0, 60, 151),
@@ -287,34 +304,34 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
                     Color.fromARGB(255, 0, 112, 7),
                     Color.fromARGB(255, 77, 77, 77),
                     Color.fromARGB(255, 96, 0, 175),
-                    ].map((c) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 2),
-                        child: Material(
-                          color: c,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(8),
-                              bottom: Radius.circular(8),
-                            ),
-                            side: BorderSide(
-                              color: Colors.grey,
-                              width: 2,
-                            ),
+                  ].map((c) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                      child: Material(
+                        color: c,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(8),
+                            bottom: Radius.circular(8),
                           ),
-                          clipBehavior: Clip.antiAlias,
-                          child: InkWell(
-                            onTap: () => setState(() => _backgroundColor = c),
-                            child: const SizedBox(
-                              width: 35,
-                              height: 35,
-                            ),
+                          side: BorderSide(
+                            color: Colors.grey,
+                            width: 2,
                           ),
                         ),
-                      );
-                    }).toList(),
-                  ),
+                        clipBehavior: Clip.antiAlias,
+                        child: InkWell(
+                          onTap: () => setState(() => _backgroundColor = c),
+                          child: const SizedBox(
+                            width: 35,
+                            height: 35,
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 ),
+              ),
 
               const SizedBox(height: 10),
               // Border color picker
@@ -333,29 +350,30 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
                     Color.fromARGB(255, 132, 0, 255),
                   ].map((c) {
                     return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 2),
-                        child: Material(
-                          color: c,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(8),
-                              bottom: Radius.circular(8),
-                            ),
-                            side: BorderSide(
-                              color: Colors.grey,
-                              width: 2,
-                            ),
+                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                      child: Material
+                      (
+                        color: c,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(8),
+                            bottom: Radius.circular(8),
                           ),
-                          clipBehavior: Clip.antiAlias,
-                          child: InkWell(
-                            onTap: () => setState(() => _borderColor = c),
-                            child: const SizedBox(
-                              width: 35,
-                              height: 35,
-                            ),
+                          side: BorderSide(
+                            color: Colors.grey,
+                            width: 2,
                           ),
                         ),
-                      );
+                        clipBehavior: Clip.antiAlias,
+                        child: InkWell(
+                          onTap: () => setState(() => _borderColor = c),
+                          child: const SizedBox(
+                            width: 35,
+                            height: 35,
+                          ),
+                        ),
+                      ),
+                    );
                   }).toList(),
                 ),
               ),
@@ -377,35 +395,36 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
                     Color.fromARGB(255, 158, 85, 255),
                   ].map((c) {
                     return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 2),
-                        child: Material(
-                          color: c,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(8),
-                              bottom: Radius.circular(8),
-                            ),
-                            side: BorderSide(
-                              color: Colors.grey,
-                              width: 2,
-                            ),
+                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                      child: Material(
+                        color: c,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(8),
+                            bottom: Radius.circular(8),
                           ),
-                          clipBehavior: Clip.antiAlias,
-                          child: InkWell(
-                            onTap: () => setState(() => _textColor = c),
-                            child: const SizedBox(
-                              width: 35,
-                              height: 35,
-                            ),
+                          side: BorderSide(
+                            color: Colors.grey,
+                            width: 2,
                           ),
                         ),
-                      );
+                        clipBehavior: Clip.antiAlias,
+                        child: InkWell(
+                          onTap: () => setState(() => _textColor = c),
+                          child: const SizedBox(
+                            width: 35,
+                            height: 35,
+                          ),
+                        ),
+                      ),
+                    );
                   }).toList(),
                 ),
               ),
 
               const SizedBox(height: 12),
 
+              // Sliders: text size and volume (with themed colors)
               Column(
                 children: [
                   Row(
@@ -462,6 +481,7 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
 
               const SizedBox(height: 10),
 
+              // Sound file picker + filename preview (if selected)
               ElevatedButton.icon(
                 onPressed: _pickSound,
                 icon: const Icon(Icons.audiotrack),
@@ -470,6 +490,7 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
               if (_currentSoundPath.isNotEmpty)
                 Text(_currentSoundPath.split('/').last, style: const TextStyle(color: Colors.grey, fontSize: 10)),
               const SizedBox(height: 20),
+              // Footer actions: delete / cancel / save
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

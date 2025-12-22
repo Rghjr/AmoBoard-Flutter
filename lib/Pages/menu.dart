@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../custom_button.dart';
@@ -8,6 +9,8 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'soundboard_page.dart';
 
+/// Convert a hex-like string (e.g., "#RRGGBB" or "RRGGBB") into a [Color].
+/// Returns [fallback] if the value is null or parsing fails.
 Color colorFromHex(dynamic value, Color fallback) {
   if (value == null) return fallback;
   try {
@@ -17,6 +20,8 @@ Color colorFromHex(dynamic value, Color fallback) {
   }
 }
 
+/// Convert a [Color] to a plain "RRGGBB" hex string (without '#').
+/// Note: This assumes access to `r/g/b` channels on [Color].
 String colorToHex(Color c) {
   // return RRGGBB
   final r = (c.r * 255).round().toRadixString(16).padLeft(2, '0');
@@ -25,6 +30,10 @@ String colorToHex(Color c) {
   return '$r$g$b';
 }
 
+/// Main menu screen: shows a list of configurable buttons.
+/// - Add/Edit/Delete buttons via overlay editor
+/// - Persist data in SharedPreferences
+/// - Drag-and-drop reorder supported
 class Menu extends StatefulWidget {
   const Menu({super.key});
 
@@ -33,9 +42,14 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
+  /// In-memory list of button configs (id, text, colors, icon, etc.)
   List<Map<String, dynamic>> buttons = [];
+
+  /// Active editor overlay instance (if open)
   OverlayEntry? _editorOverlay;
 
+  /// Check if [path] points to an asset (vs. a device file path).
+  /// Treat absolute paths and ones containing 'storage' as files.
   bool isAsset(String path) {
     return !(path.startsWith('/') || path.contains('storage'));
   }
@@ -43,14 +57,17 @@ class _MenuState extends State<Menu> {
   @override
   void initState() {
     super.initState();
-    loadButtons();
+    loadButtons(); // Load saved buttons or defaults from assets
   }
 
+  /// Show the overlay editor to add or edit a button.
+  /// Uses StatefulBuilder to update overlay UI independently of page state.
   void _showEditorOverlay({Map<String, dynamic>? buttonData}) {
-    int gridColumns = buttonData?['gridColumns'] ?? 2; // domyślnie 2 kolumny
-    if (_editorOverlay != null) return;
+    int gridColumns = buttonData?['gridColumns'] ?? 2; // default: 2 columns
+    if (_editorOverlay != null) return; // prevent multiple overlays
     final overlay = Overlay.of(context);
 
+    // Resolve current colors with safe fallbacks
     Color backgroundColor = buttonData != null
       ? colorFromHex(buttonData['backgroundColor'], Colors.black)
       : Colors.black;
@@ -61,6 +78,7 @@ class _MenuState extends State<Menu> {
       ? colorFromHex(buttonData['textColor'], Colors.white)
       : Colors.white;
 
+    // Prepare controllers and initial visual state
     final TextEditingController nameController =
         TextEditingController(text: buttonData?['text'] ?? '');
     String imagePath = buttonData != null && buttonData['icon'] != null
@@ -72,12 +90,13 @@ class _MenuState extends State<Menu> {
       builder: (context) => StatefulBuilder(
         builder: (context, setStateOverlay) => Stack(
           children: [
+            // Blurred backdrop; tap to dismiss
             Positioned.fill(
               child: GestureDetector(
                 onTap: () {
                   _editorOverlay?.remove();
                   _editorOverlay = null;
-                  setState(() {});
+                  setState(() {}); // refresh parent after close
                 },
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
@@ -87,6 +106,7 @@ class _MenuState extends State<Menu> {
                 ),
               ),
             ),
+            // Centered editor panel
             Center(
               child: Material(
                 color: Colors.transparent,
@@ -103,6 +123,7 @@ class _MenuState extends State<Menu> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        // Title reflects mode: edit vs add
                         Text(
                           buttonData != null ? "Edytuj przycisk" : "Dodaj nowy przycisk",
                           textAlign: TextAlign.center,
@@ -112,6 +133,7 @@ class _MenuState extends State<Menu> {
                               color: textColor),
                         ),
                         const SizedBox(height: 12),
+                        // Icon picker: tap to select image from gallery
                         Center(
                           child: GestureDetector(
                             onTap: () async {
@@ -121,7 +143,7 @@ class _MenuState extends State<Menu> {
                               if (image != null) {
                                 pickedImage = File(image.path);
                                 imagePath = pickedImage!.path;
-                                setStateOverlay(() {}); // live update
+                                setStateOverlay(() {}); // live update preview
                               }
                             },
                             child: ClipRRect(
@@ -156,6 +178,7 @@ class _MenuState extends State<Menu> {
                           ),
                         ),
                         const SizedBox(height: 12),
+                        // Button label input
                         TextField(
                           controller: nameController,
                           style: TextStyle(color: textColor),
@@ -176,7 +199,7 @@ class _MenuState extends State<Menu> {
                         ),
 
                         const SizedBox(height: 12),
-                        // Liczba kolumn
+                        // Number of grid columns (1–4)
                         Text("Kolumny: $gridColumns", style: TextStyle(color: Colors.white)),
                         Slider(
                           value: gridColumns.toDouble(),
@@ -189,9 +212,8 @@ class _MenuState extends State<Menu> {
                           },
                         ),
 
-
                         const SizedBox(height: 12),
-                        // Kolory tła
+                        // Background color presets
                         Text("Kolor tła", style: TextStyle(color: Colors.white)),
                         const SizedBox(height: 4),
                         Row(
@@ -207,6 +229,7 @@ class _MenuState extends State<Menu> {
                           ],
                         ),
                         const SizedBox(height: 8),
+                        // Border color presets
                         Text("Kolor border", style: TextStyle(color: Colors.white)),
                         const SizedBox(height: 4),
                         Row(
@@ -222,6 +245,7 @@ class _MenuState extends State<Menu> {
                           ],
                         ),
                         const SizedBox(height: 8),
+                        // Text color presets
                         Text("Kolor tekstu", style: TextStyle(color: Colors.white)),
                         const SizedBox(height: 4),
                         Row(
@@ -237,6 +261,7 @@ class _MenuState extends State<Menu> {
                           ],
                         ),
                         const SizedBox(height: 16),
+                        // Action buttons row: delete / cancel / save
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -247,7 +272,7 @@ class _MenuState extends State<Menu> {
                                   saveButtons();
                                   _editorOverlay?.remove();
                                   _editorOverlay = null;
-                                  setState(() {});
+                                  setState(() {}); // refresh after delete
                                 },
                                 child: const Text("Usuń", style: TextStyle(color: Colors.red)),
                               ),
@@ -257,13 +282,14 @@ class _MenuState extends State<Menu> {
                                   onPressed: () {
                                     _editorOverlay?.remove();
                                     _editorOverlay = null;
-                                    setState(() {});
+                                    setState(() {}); // close without saving
                                   },
                                   child: Text("Anuluj", style: TextStyle(color: textColor)),
                                 ),
                                 const SizedBox(width: 10),
                                 TextButton(
                                   onPressed: () async {
+                                    // Save changes or add new button
                                     final newName = nameController.text.trim();
                                     if (buttonData != null) {
                                       final index = buttons.indexWhere((b) => b['id'] == buttonData['id']);
@@ -280,6 +306,7 @@ class _MenuState extends State<Menu> {
                                           '#${colorToHex(textColor)}';
                                       }
                                     } else {
+                                      // Create with incremental id based on last item
                                       final id = buttons.isEmpty ? 0 : buttons.last['id'] + 1;
                                       buttons.add({
                                         'id': id,
@@ -294,7 +321,7 @@ class _MenuState extends State<Menu> {
                                     await saveButtons();
                                     _editorOverlay?.remove();
                                     _editorOverlay = null;
-                                    setState(() {});
+                                    setState(() {}); // reflect saved changes
                                   },
                                   child: Text("Zapisz", style: TextStyle(color: textColor)),
                                 ),
@@ -313,9 +340,10 @@ class _MenuState extends State<Menu> {
       ),
     );
 
-    overlay.insert(_editorOverlay!);
+    overlay.insert(_editorOverlay!); // Add overlay to the current overlay stack
   }
 
+  /// Render a tappable color swatch; calls [onTap] with the selected color.
   Widget _colorButton(Color color, Function(Color) onTap) {
     return Padding(
       padding: const EdgeInsets.only(right: 8),
@@ -334,13 +362,14 @@ class _MenuState extends State<Menu> {
     );
   }
 
+  /// Short press handler: open SoundboardPage, await potential updated data, then persist.
   void handlePress(int id) async {
     final btnIndex = buttons.indexWhere((b) => b['id'] == id);
     if (btnIndex == -1) return;
 
     final btnData = buttons[btnIndex];
 
-    // Przechodzimy do SoundboardPage i czekamy na wynik (zaktualizowane dane)
+    // Navigate to SoundboardPage and wait for updated data
     final updatedData = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -348,24 +377,28 @@ class _MenuState extends State<Menu> {
       ),
     );
 
-    // Jeśli wróciły dane (nie było cofnięcia bez zapisu)
+    // Apply result if present
     if (updatedData != null) {
       setState(() {
         buttons[btnIndex] = updatedData;
       });
-      await saveButtons(); // Zapis do SharedPreferences
+      await saveButtons(); // Persist changes
     }
   }
 
+  /// Long press handler: open the editor overlay for the selected button.
   void handleLongPress(int id) {
     final btn = buttons.firstWhere((b) => b['id'] == id);
     _showEditorOverlay(buttonData: btn);
   }
 
+  /// "+" button handler: open editor overlay with default values.
   void handleAddPress() {
     _showEditorOverlay();
   }
 
+  /// Load buttons from SharedPreferences or fallback to bundled asset JSON.
+  /// Ensures the list is sorted by `id`.
   Future<void> loadButtons() async {
     final prefs = await SharedPreferences.getInstance();
     final savedData = prefs.getString('buttons');
@@ -376,6 +409,7 @@ class _MenuState extends State<Menu> {
         buttons.sort((a, b) => (a['id'] as int).compareTo(b['id'] as int));
       });
     } else {
+      // Fallback to defaults from assets
       final String jsonString = await rootBundle.loadString('assets/menu_buttons.json');
       final List<dynamic> jsonData = json.decode(jsonString);
       setState(() {
@@ -386,6 +420,7 @@ class _MenuState extends State<Menu> {
     }
   }
 
+  /// Persist current button list into SharedPreferences as JSON.
   Future<void> saveButtons() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('buttons', json.encode(buttons));
@@ -408,22 +443,26 @@ class _MenuState extends State<Menu> {
           padding: const EdgeInsets.all(15),
           itemCount: buttons.length + 1,
           onReorder: (oldIndex, newIndex) async {
+            // Prevent reordering the trailing "add" row or out-of-bounds moves
             if (oldIndex == buttons.length || newIndex > buttons.length) return;
             setState(() {
               if (newIndex > oldIndex) newIndex -= 1;
               final item = buttons.removeAt(oldIndex);
               buttons.insert(newIndex, item);
+              // Reassign sequential ids to match new order
               for (int i = 0; i < buttons.length; i++) {
                 buttons[i]['id'] = i;
               }
             });
-            await saveButtons();
+            await saveButtons(); // Persist new order
           },
+          // Keep original look during drag (no special proxy styling)
           proxyDecorator: (child, index, animation) {
-            if (index == buttons.length) return child;
+            if (index == buttons.length) return child; // ignore "add" row
             return Material(color: Colors.transparent, child: child);
           },
           itemBuilder: (context, index) {
+            // Trailing "+" row to add new buttons
             if (index == buttons.length) {
               return Padding(
                 key: const ValueKey('add_button'),
@@ -445,6 +484,7 @@ class _MenuState extends State<Menu> {
               );
             }
 
+            // Regular menu row: CustomButton + drag handle
             final btn = buttons[index];
             return Padding(
               key: ValueKey(btn['id']),
