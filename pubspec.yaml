@@ -1,84 +1,87 @@
+
+# Project name used by Flutter tooling and package identification
 name: amoboard_flutter
-description: "Amoboard Flutter Project – customizable soundboard app."
+
+# Short description of the project
+description: "A new Flutter project."
+
+# This package is not intended for publishing to pub.dev
 publish_to: 'none'
 
+# App version: semantic version + build number
 version: 1.0.0+1
 
-# ==============================
-# Environment settings
-# ==============================
 environment:
+  # Dart SDK constraint (compatible with Dart/Flutter using this version or higher)
   sdk: ^3.10.1
 
-# ==============================
-# Dependencies – runtime packages
-# ==============================
 dependencies:
   flutter:
+    # Core Flutter SDK
     sdk: flutter
-
-  # App icons generator
+  # Generates launcher icons for Android and iOS
   flutter_launcher_icons: ^0.14.4
-
-  # Device preview for testing UI responsiveness
+  # Preview app on different devices/sizes/orientations
   device_preview: ^1.1.0
-
-  # Handle permissions (storage, camera, microphone)
+  # Request and check runtime permissions (camera, storage, etc.)
   permission_handler: ^12.0.1
-
   # Pick images from gallery or camera
   image_picker: ^1.2.1
-
-  # File system utilities
+  # Locate commonly used paths on the device (documents, temp, app dir)
   path_provider: ^2.0.14
+  # Utilities for manipulating file paths
   path: ^1.8.3
+  # Pick any type of file from the device filesystem
   file_picker: ^10.3.7
-
-  # Color picker UI widget
+  # UI widget to pick colors
   flutter_colorpicker: ^1.1.0
-
-  # Persistent storage for app settings
+  # Lightweight key-value storage for persisting simple data
   shared_preferences: ^2.1.0
-
-  # Audio playback
+  # Simple audio playback library (legacy API, good for short sounds)
   audioplayers: ^6.0.0
+  # Widgets to build reorderable lists/grids
+  reorderables: ^0.6.0
+  # Reorderable grid view with drag-and-drop support
+  flutter_reorderable_grid_view: ^5.5.2
+  # Advanced, low-latency audio playback (streams, playlists, gapless)
   just_audio: ^0.9.38
 
-  # Drag-and-drop UI components
-  reorderables: ^0.6.0
-  flutter_reorderable_grid_view: ^5.5.2
-
-# ==============================
-# Dev dependencies – testing & linting
-# ==============================
 dev_dependencies:
   flutter_test:
+    # Flutter testing framework (unit/widget tests)
     sdk: flutter
+  # Recommended lint rules for code quality and consistency
   flutter_lints: ^6.0.0
+  # Also used in dev to generate launcher icons from config below
+  flutter_launcher_icons: ^0.14.4
 
-# ==============================
-# Flutter launcher icons config
-# ==============================
 flutter_icons:
+  # Enable icon generation for Android and iOS
   android: true
   ios: true
+  # Base image for the launcher icon
   image_path: "assets/Amogus_Logo_Apki.png"
+  # Background color for adaptive icons (Android 8.0+)
   adaptive_icon_background: "#ffffff"
+  # Foreground layer for adaptive icons
   adaptive_icon_foreground: "assets/1024.png"
 
-# ==============================
-# Flutter assets
-# ==============================
 flutter:
+  # Use Material Design icons and theming
   uses-material-design: true
 
   assets:
-    - assets/menu_buttons.json          # Default button configs
-    - assets/Megafon_Na_Czerwonym.png  # Example sound icon
-    - assets/xd.png                     # Placeholder icon
-    - assets/sounds/                    # Folder with all sound files
-    - assets/sound_icons/               # Icons for each sound
-    - assets/earrape_icon.png           # Special "earrape" mode icon
-    - assets/sadCat.png                 # Example image
-    - assets/Amogus_Logo_Apki.png      # App icon
-    - assets/Amongus_Logo_W_Apce.png   # Logo for Menu page
+    # Lottie/JSON or custom config for menu buttons
+    - assets/menu_buttons.json
+    # Image assets used in the app UI
+    - assets/Megafon_Na_Czerwonym.png
+    - assets/xd.png
+    # Folder with audio files bundled with the app
+    - assets/sounds/
+    # Folder with icons associated with sounds
+    - assets/sound_icons/
+    # Additional image assets
+    - assets/earrape_icon.png
+    - assets/sadCat.png
+    - assets/Amogus_Logo_Apki.png
+    - assets/Amongus_Logo_W_Apce.png
