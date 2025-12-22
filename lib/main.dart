@@ -1,29 +1,26 @@
+
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import 'Pages/menu.dart';
 
-/// Application entry point.
-///
-/// Initializes Flutter bindings, requests required runtime permissions,
-/// and launches the root widget of the application.
+/// Entry point of the app.
+/// Ensures Flutter bindings are initialized, requests runtime permissions,
+/// and then launches the root widget.
 Future<void> main() async {
-  // Required to use async code before runApp
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Request necessary system permissions before UI is rendered
   await _requestPermissions();
 
-  // Launch application
   runApp(const MyApp());
 }
 
-/// Requests all permissions required by the application.
-///
-/// Permissions are requested at startup to avoid runtime interruptions
-/// during audio playback, file access, or media selection.
+/// Requests a set of runtime permissions needed by the app:
+/// - photos/storage: for loading/saving images and files
+/// - audio/microphone: for audio playback/recording (if used)
+/// - camera: for picking/taking pictures (if used)
+/// Logs a message for any permission that is not granted.
 Future<void> _requestPermissions() async {
-  final List<Permission> permissions = [
+  final permissions = [
     Permission.photos,
     Permission.storage,
     Permission.audio,
@@ -31,30 +28,23 @@ Future<void> _requestPermissions() async {
     Permission.camera,
   ];
 
-  for (final permission in permissions) {
-    final status = await permission.request();
-
-    // Log denied permissions for debugging purposes
+  for (var perm in permissions) {
+    final status = await perm.request();
     if (!status.isGranted) {
-      debugPrint(
-        'Permission denied: ${permission.toString()}',
-      );
+      debugPrint("Brak dostępu do: ${perm.toString()}");
     }
   }
 }
 
 /// Root widget of the application.
-///
-/// Configures the MaterialApp and defines the initial screen.
+/// Disables the debug banner and sets `Menu` as the home screen.
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-
-      /// Initial application screen
       home: Menu(),
     );
   }
