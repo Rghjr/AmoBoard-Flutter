@@ -10,34 +10,35 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../custom_button.dart';
 import 'soundboard_page.dart';
 
-/// =======================
-/// 🔧 UTILSY KOLORÓW
-/// =======================
+/// =======================================================
+/// Color utilities
+/// =======================================================
 
-/// Zamienia HEX zapisany jako String na Color
-/// Jak coś się spierdoli → fallback
+/// Converts a HEX string value to a [Color].
+/// If the input is invalid or null, returns [fallback].
 Color colorFromHex(dynamic value, Color fallback) {
   if (value == null) return fallback;
   try {
     return Color(
-      int.parse(value.toString().replaceFirst("#", "0xff")),
+      int.parse(value.toString().replaceFirst('#', '0xff')),
     );
   } catch (_) {
     return fallback;
   }
 }
 
-/// Zamienia Color → hex RRGGBB (bez #)
-String colorToHex(Color c) {
-  final r = (c.r * 255).round().toRadixString(16).padLeft(2, '0');
-  final g = (c.g * 255).round().toRadixString(16).padLeft(2, '0');
-  final b = (c.b * 255).round().toRadixString(16).padLeft(2, '0');
+/// Converts a [Color] object to a HEX string in RRGGBB format.
+String colorToHex(Color color) {
+  final r = (color.r * 255).round().toRadixString(16).padLeft(2, '0');
+  final g = (color.g * 255).round().toRadixString(16).padLeft(2, '0');
+  final b = (color.b * 255).round().toRadixString(16).padLeft(2, '0');
   return '$r$g$b';
 }
 
-/// =======================
-/// 📋 MENU – LISTA SOUNDBOARDÓW
-/// =======================
+/// =======================================================
+/// Menu screen
+/// Displays all soundboards and handles creation/editing
+/// =======================================================
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -47,13 +48,14 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  /// Lista wszystkich soundboardów (menu buttons)
+  /// List of all soundboard buttons in the menu.
+  /// Each button contains id, text, colors, icon path, and grid configuration.
   List<Map<String, dynamic>> buttons = [];
 
-  /// Overlay do edycji/dodawania
+  /// Overlay used for editing or creating new soundboard buttons.
   OverlayEntry? _editorOverlay;
 
-  /// Sprawdza czy ikona jest assetem czy plikiem z telefonu
+  /// Returns true if the given [path] is an asset, false if it's a local file path.
   bool isAsset(String path) {
     return !(path.startsWith('/') || path.contains('storage'));
   }
@@ -61,21 +63,22 @@ class _MenuState extends State<Menu> {
   @override
   void initState() {
     super.initState();
+    // Loads buttons from local storage or default JSON asset on app start
     loadButtons();
   }
 
-  /// =======================
-  /// ✏️ OVERLAY EDYTORA
-  /// =======================
+  /// =======================================================
+  /// Editor Overlay
+  /// Displays a modal to create or edit soundboard buttons
+  /// =======================================================
 
   void _showEditorOverlay({Map<String, dynamic>? buttonData}) {
     if (_editorOverlay != null) return;
 
     final overlay = Overlay.of(context);
 
-    // Wczytaj dane albo ustaw defaulty
+    // Initialize default or existing values
     int gridColumns = buttonData?['gridColumns'] ?? 2;
-
     Color backgroundColor =
         colorFromHex(buttonData?['backgroundColor'], Colors.black);
     Color borderColor =
@@ -95,7 +98,7 @@ class _MenuState extends State<Menu> {
         builder: (context, setOverlayState) {
           return Stack(
             children: [
-              /// Tło + blur
+              /// Background with blur effect
               Positioned.fill(
                 child: GestureDetector(
                   onTap: _closeOverlay,
@@ -108,7 +111,7 @@ class _MenuState extends State<Menu> {
                 ),
               ),
 
-              /// Okno edytora
+              /// Editor modal container
               Center(
                 child: Material(
                   color: Colors.transparent,
@@ -122,29 +125,30 @@ class _MenuState extends State<Menu> {
                     ),
                     child: SingleChildScrollView(
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          /// Tytuł
+                          /// Modal title
                           Text(
                             buttonData != null
-                                ? "Edytuj przycisk"
-                                : "Dodaj nowy przycisk",
+                                ? 'Edit soundboard'
+                                : 'Create soundboard',
                             style: TextStyle(
                               color: textColor,
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                             ),
+                            textAlign: TextAlign.center,
                           ),
 
                           const SizedBox(height: 12),
 
-                          /// Ikona
+                          /// Icon selection
                           GestureDetector(
                             onTap: () async {
                               final picker = ImagePicker();
                               final image = await picker.pickImage(
                                 source: ImageSource.gallery,
                               );
-
                               if (image != null) {
                                 pickedImage = File(image.path);
                                 imagePath = image.path;
@@ -166,18 +170,18 @@ class _MenuState extends State<Menu> {
 
                           const SizedBox(height: 12),
 
-                          /// Nazwa
+                          /// Text input for button name
                           TextField(
                             controller: nameController,
                             style: TextStyle(color: textColor),
-                            decoration: _inputDecoration(
-                                borderColor, textColor),
+                            decoration:
+                                _inputDecoration(borderColor, textColor),
                           ),
 
                           const SizedBox(height: 12),
 
-                          /// Kolumny
-                          Text("Kolumny: $gridColumns",
+                          /// Grid column selector
+                          Text('Grid columns: $gridColumns',
                               style: const TextStyle(color: Colors.white)),
                           Slider(
                             value: gridColumns.toDouble(),
@@ -191,20 +195,20 @@ class _MenuState extends State<Menu> {
 
                           const SizedBox(height: 12),
 
-                          /// Kolory
-                          _colorPicker("Kolor tła", (c) {
+                          /// Color pickers
+                          _colorPicker('Background color', (c) {
                             backgroundColor = c;
                           }),
-                          _colorPicker("Kolor border", (c) {
+                          _colorPicker('Border color', (c) {
                             borderColor = c;
                           }),
-                          _colorPicker("Kolor tekstu", (c) {
+                          _colorPicker('Text color', (c) {
                             textColor = c;
                           }),
 
                           const SizedBox(height: 16),
 
-                          /// Akcje
+                          /// Actions: delete, cancel, save
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -216,18 +220,15 @@ class _MenuState extends State<Menu> {
                                     saveButtons();
                                     _closeOverlay();
                                   },
-                                  child: const Text("Usuń",
-                                      style:
-                                          TextStyle(color: Colors.red)),
+                                  child: const Text('Delete',
+                                      style: TextStyle(color: Colors.red)),
                                 ),
-
                               Row(
                                 children: [
                                   TextButton(
                                     onPressed: _closeOverlay,
-                                    child: Text("Anuluj",
-                                        style:
-                                            TextStyle(color: textColor)),
+                                    child: Text('Cancel',
+                                        style: TextStyle(color: textColor)),
                                   ),
                                   TextButton(
                                     onPressed: () async {
@@ -242,9 +243,8 @@ class _MenuState extends State<Menu> {
                                       );
                                       _closeOverlay();
                                     },
-                                    child: Text("Zapisz",
-                                        style:
-                                            TextStyle(color: textColor)),
+                                    child: Text('Save',
+                                        style: TextStyle(color: textColor)),
                                   ),
                                 ],
                               )
@@ -265,16 +265,18 @@ class _MenuState extends State<Menu> {
     overlay.insert(_editorOverlay!);
   }
 
+  /// Closes the overlay editor and refreshes the menu state.
   void _closeOverlay() {
     _editorOverlay?.remove();
     _editorOverlay = null;
     setState(() {});
   }
 
-  /// =======================
-  /// 💾 ZAPIS / ODCZYT
-  /// =======================
+  /// =======================================================
+  /// Persistence methods
+  /// =======================================================
 
+  /// Loads buttons from SharedPreferences. If none exist, loads defaults from JSON asset.
   Future<void> loadButtons() async {
     final prefs = await SharedPreferences.getInstance();
     final saved = prefs.getString('buttons');
@@ -289,19 +291,22 @@ class _MenuState extends State<Menu> {
       await saveButtons();
     }
 
+    // Ensure buttons are sorted by ID
     buttons.sort((a, b) => a['id'].compareTo(b['id']));
     setState(() {});
   }
 
+  /// Saves the current list of buttons to SharedPreferences as JSON string.
   Future<void> saveButtons() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('buttons', json.encode(buttons));
   }
 
-  /// =======================
-  /// ▶️ NAWIGACJA
-  /// =======================
+  /// =======================================================
+  /// Navigation methods
+  /// =======================================================
 
+  /// Opens the soundboard page for a given button ID and updates data on return.
   void handlePress(int id) async {
     final index = buttons.indexWhere((b) => b['id'] == id);
     if (index == -1) return;
@@ -320,9 +325,9 @@ class _MenuState extends State<Menu> {
     }
   }
 
-  /// =======================
-  /// 🧱 UI
-  /// =======================
+  /// =======================================================
+  /// UI
+  /// =======================================================
 
   @override
   Widget build(BuildContext context) {
@@ -343,18 +348,14 @@ class _MenuState extends State<Menu> {
     );
   }
 
-  /// =======================
-  /// 🔁 REORDER
-  /// =======================
-
+  /// Handles reordering of buttons in the list
   void _onReorder(int oldIndex, int newIndex) async {
     if (oldIndex >= buttons.length) return;
-
     if (newIndex > oldIndex) newIndex--;
-
     final item = buttons.removeAt(oldIndex);
     buttons.insert(newIndex, item);
 
+    // Update IDs after reorder
     for (int i = 0; i < buttons.length; i++) {
       buttons[i]['id'] = i;
     }
@@ -363,11 +364,12 @@ class _MenuState extends State<Menu> {
     setState(() {});
   }
 
+  /// Builds individual items in the ReorderableListView
   Widget _buildItem(BuildContext context, int index) {
     if (index == buttons.length) {
       return ElevatedButton(
         onPressed: handleAddPress,
-        child: const Text("+", style: TextStyle(fontSize: 36)),
+        child: const Text('+', style: TextStyle(fontSize: 36)),
       );
     }
 
@@ -388,14 +390,14 @@ class _MenuState extends State<Menu> {
     );
   }
 
+  /// Opens overlay to add a new button
   void handleAddPress() => _showEditorOverlay();
 
-  /// =======================
-  /// 🧠 HELPERKI UI
-  /// =======================
+  /// =======================================================
+  /// UI helpers
+  /// =======================================================
 
-  InputDecoration _inputDecoration(
-      Color border, Color textColor) {
+  InputDecoration _inputDecoration(Color border, Color textColor) {
     return InputDecoration(
       filled: true,
       fillColor: Colors.black,
@@ -405,11 +407,12 @@ class _MenuState extends State<Menu> {
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(color: border, width: 2),
       ),
-      hintText: "nazwa",
+      hintText: 'Name',
       hintStyle: TextStyle(color: textColor.withOpacity(0.5)),
     );
   }
 
+  /// Renders a color picker row for selecting background, border, or text color.
   Widget _colorPicker(String label, Function(Color) onPick) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -417,7 +420,7 @@ class _MenuState extends State<Menu> {
         Text(label, style: const TextStyle(color: Colors.white)),
         Row(
           children: [
-            for (final c in [
+            for (final color in [
               Colors.black,
               Colors.deepPurpleAccent,
               Colors.orange,
@@ -426,7 +429,7 @@ class _MenuState extends State<Menu> {
               Colors.green,
               Colors.white,
             ])
-              _colorButton(c, onPick),
+              _colorButton(color, onPick),
           ],
         ),
         const SizedBox(height: 8),
@@ -434,15 +437,16 @@ class _MenuState extends State<Menu> {
     );
   }
 
-  Widget _colorButton(Color c, Function(Color) onTap) {
+  /// Individual color button used inside _colorPicker
+  Widget _colorButton(Color color, Function(Color) onTap) {
     return GestureDetector(
-      onTap: () => onTap(c),
+      onTap: () => onTap(color),
       child: Container(
         margin: const EdgeInsets.only(right: 8),
         width: 30,
         height: 30,
         decoration: BoxDecoration(
-          color: c,
+          color: color,
           borderRadius: BorderRadius.circular(5),
           border: Border.all(color: Colors.white),
         ),
@@ -450,35 +454,33 @@ class _MenuState extends State<Menu> {
     );
   }
 
-  void _saveButton(
-    Map<String, dynamic>? old,
+  /// Saves a new or existing button configuration
+  Future<void> _saveButton(
+    Map<String, dynamic>? existing,
     String name,
     String icon,
     int columns,
-    Color bg,
+    Color background,
     Color border,
     Color text,
   ) async {
-    if (old != null) {
-      final i = buttons.indexWhere((b) => b['id'] == old['id']);
-      buttons[i] = {
-        ...old,
-        'text': name.isEmpty ? "nazwa" : name,
-        'icon': icon,
-        'gridColumns': columns,
-        'backgroundColor': '#${colorToHex(bg)}',
-        'borderColor': '#${colorToHex(border)}',
-        'textColor': '#${colorToHex(text)}',
-      };
+    final data = {
+      'text': name.isEmpty ? 'Name' : name,
+      'icon': icon,
+      'gridColumns': columns,
+      'backgroundColor': '#${colorToHex(background)}',
+      'borderColor': '#${colorToHex(border)}',
+      'textColor': '#${colorToHex(text)}',
+    };
+
+    if (existing != null) {
+      final index =
+          buttons.indexWhere((b) => b['id'] == existing['id']);
+      buttons[index] = {...existing, ...data};
     } else {
       buttons.add({
         'id': buttons.length,
-        'text': name.isEmpty ? "nazwa" : name,
-        'icon': icon,
-        'gridColumns': columns,
-        'backgroundColor': '#${colorToHex(bg)}',
-        'borderColor': '#${colorToHex(border)}',
-        'textColor': '#${colorToHex(text)}',
+        ...data,
       });
     }
 
