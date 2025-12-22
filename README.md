@@ -3,7 +3,7 @@
 Advanced, fully customizable soundboard application built with **Flutter**.  
 The app allows users to create dynamic soundboards with custom sounds, icons, layouts, and real-time audio control.
 
-Project created as a larger, modular mobile application — no generators, no boilerplate trash, everything written manually.
+Project created as a larger, modular mobile application — most writen manually, a little bit help from AI
 
 ---
 
