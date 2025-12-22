@@ -1,22 +1,22 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 
+/// Custom button widget with icon (asset or file), text, and tap/long press
 class CustomButton extends StatelessWidget {
-  final int id;
-  final String text;
-  final String icon;
-  final VoidCallback onPressed;
-  final VoidCallback? onLongPress;
+  final int id; // button id, useful for tracking
+  final String text; // text label
+  final String icon; // path to icon, can be asset or file
+  final VoidCallback onPressed; // tap callback
+  final VoidCallback? onLongPress; // optional long press callback
 
-  final double height;
-  final double width;
-
-  final Color backgroundColor;
-  final Color borderColor;
-  final Color textColor;
-  final double borderRadius;
-  final double iconRadius;
-  final double fontSize;
+  final double height; // button height
+  final double width; // button width
+  final Color backgroundColor; // button background
+  final Color borderColor; // border color
+  final Color textColor; // text color
+  final double borderRadius; // button corners
+  final double iconRadius; // icon corners
+  final double fontSize; // text size
 
   const CustomButton({
     super.key,
@@ -35,8 +35,8 @@ class CustomButton extends StatelessWidget {
     this.fontSize = 18,
   });
 
+  /// Builds the icon widget depending on whether it's an asset or file
   Widget _buildIcon() {
-    // jeśli ścieżka zaczyna się od assets – ładujemy asseta
     if (icon.startsWith("assets/")) {
       return Image.asset(
         icon,
@@ -45,7 +45,6 @@ class CustomButton extends StatelessWidget {
         fit: BoxFit.cover,
       );
     }
-    // w innym przypadku ładujemy plik z urządzenia
     return Image.file(
       File(icon),
       height: 60,
@@ -60,10 +59,10 @@ class CustomButton extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(borderRadius),
-        onTap: onPressed,
-        onLongPress: onLongPress,
-        splashColor: borderColor.withAlpha((255 * 0.3).round()),
-        highlightColor: borderColor.withAlpha((255 * 0.1).round()),
+        onTap: onPressed, // call onPressed on tap
+        onLongPress: onLongPress, // call onLongPress if provided
+        splashColor: borderColor.withAlpha((255 * 0.3).round()), // ripple effect
+        highlightColor: borderColor.withAlpha((255 * 0.1).round()), // highlight effect
         child: Container(
           height: height,
           width: width,
