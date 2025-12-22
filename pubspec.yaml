@@ -1,35 +1,64 @@
 name: amoboard_flutter
-description: "A new Flutter project."
+description: "Amoboard Flutter Project – customizable soundboard app."
 publish_to: 'none'
 
 version: 1.0.0+1
 
+# ==============================
+# Environment settings
+# ==============================
 environment:
   sdk: ^3.10.1
 
+# ==============================
+# Dependencies – runtime packages
+# ==============================
 dependencies:
   flutter:
     sdk: flutter
+
+  # App icons generator
   flutter_launcher_icons: ^0.14.4
+
+  # Device preview for testing UI responsiveness
   device_preview: ^1.1.0
+
+  # Handle permissions (storage, camera, microphone)
   permission_handler: ^12.0.1
+
+  # Pick images from gallery or camera
   image_picker: ^1.2.1
+
+  # File system utilities
   path_provider: ^2.0.14
   path: ^1.8.3
   file_picker: ^10.3.7
+
+  # Color picker UI widget
   flutter_colorpicker: ^1.1.0
+
+  # Persistent storage for app settings
   shared_preferences: ^2.1.0
+
+  # Audio playback
   audioplayers: ^6.0.0
-  reorderables: ^0.6.0
-  flutter_reorderable_grid_view: ^5.5.2
   just_audio: ^0.9.38
 
+  # Drag-and-drop UI components
+  reorderables: ^0.6.0
+  flutter_reorderable_grid_view: ^5.5.2
+
+# ==============================
+# Dev dependencies – testing & linting
+# ==============================
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-  flutter_launcher_icons: ^0.14.4
 
+# ==============================
+# Flutter launcher icons config
+# ==============================
 flutter_icons:
   android: true
   ios: true
@@ -37,16 +66,19 @@ flutter_icons:
   adaptive_icon_background: "#ffffff"
   adaptive_icon_foreground: "assets/1024.png"
 
+# ==============================
+# Flutter assets
+# ==============================
 flutter:
   uses-material-design: true
 
   assets:
-    - assets/menu_buttons.json
-    - assets/Megafon_Na_Czerwonym.png
-    - assets/xd.png
-    - assets/sounds/
-    - assets/sound_icons/
-    - assets/earrape_icon.png
-    - assets/sadCat.png
-    - assets/Amogus_Logo_Apki.png
-    - assets/Amongus_Logo_W_Apce.png
+    - assets/menu_buttons.json          # Default button configs
+    - assets/Megafon_Na_Czerwonym.png  # Example sound icon
+    - assets/xd.png                     # Placeholder icon
+    - assets/sounds/                    # Folder with all sound files
+    - assets/sound_icons/               # Icons for each sound
+    - assets/earrape_icon.png           # Special "earrape" mode icon
+    - assets/sadCat.png                 # Example image
+    - assets/Amogus_Logo_Apki.png      # App icon
+    - assets/Amongus_Logo_W_Apce.png   # Logo for Menu page
