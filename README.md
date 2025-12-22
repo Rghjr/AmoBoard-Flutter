@@ -1,16 +1,84 @@
-# amoboard_flutter
+# 🎵 Custom Soundboard App (Flutter)
 
-A new Flutter project.
+Advanced, fully customizable soundboard application built with **Flutter**.  
+The app allows users to create dynamic soundboards with custom sounds, icons, layouts, and real-time audio control.
 
-## Getting Started
+Project created as a larger, modular mobile application — no generators, no boilerplate trash, everything written manually.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## 🚀 Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- 🎛️ Customizable soundboard buttons (label, icon, colors)
+- 🔊 Advanced audio engine with volume boosting (earrape mode 😈)
+- 🖼️ Icons from assets or user-selected images
+- 🎚️ Individual volume control per sound (0–200%+)
+- 📐 Configurable grid layout (columns, rounding, font size)
+- 🔄 Drag & drop reordering (menu + soundboard)
+- 💾 Persistent data storage using SharedPreferences
+- 📱 Android-ready (permissions, file system, audio)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## 🧠 Architecture Overview
+
+- Flutter (Dart)
+- Custom widgets for reusable UI components
+- Singleton-based audio engine
+- Page-based navigation
+- Local persistence via SharedPreferences
+- Asset + file-based media handling
+
+---
+
+## 🔊 Audio Engine
+
+The app uses **just_audio** with a custom playback engine that:
+
+- Supports volume levels above 100%
+- Dynamically spawns multiple audio players
+- Allows global stop of all active sounds
+- Includes optional global volume boost mode
+
+---
+
+## 📦 Dependencies
+
+Key packages used in the project:
+
+- just_audio
+- shared_preferences
+- image_picker
+- file_picker
+- permission_handler
+- audioplayers
+
+See `pubspec.yaml` for the full list.
+
+---
+
+## 🛠️ Setup & Run
+
+flutter pub get  
+flutter run
+
+Make sure you run the app on a real device or emulator with audio support.
+
+---
+
+## 📸 Screenshots
+
+(To be added)
+
+---
+
+## 👤 Author
+
+Krystian Strzępek  
+Flutter / Mobile Developer
+
+---
+
+## 📄 License
+
+This project is for educational and portfolio purposes.
