@@ -1,24 +1,34 @@
-
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'Pages/menu.dart';
+import 'Services/database_service.dart';
 
-/// Entry point of the app.
-/// Ensures Flutter bindings are initialized, requests runtime permissions,
-/// and then launches the root widget.
+/// Application entry point.
+/// 
+/// Initializes Flutter bindings, sets up the Hive database, requests
+/// necessary runtime permissions, and launches the root widget.
 Future<void> main() async {
+  // Initialize Flutter bindings before async operations
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Initialize Hive database and create default data if needed
+  await DatabaseService.initialize();
+
+  // Request runtime permissions for media access
   await _requestPermissions();
 
+  // Launch the application
   runApp(const MyApp());
 }
 
-/// Requests a set of runtime permissions needed by the app:
-/// - photos/storage: for loading/saving images and files
-/// - audio/microphone: for audio playback/recording (if used)
-/// - camera: for picking/taking pictures (if used)
-/// Logs a message for any permission that is not granted.
+/// Requests runtime permissions needed by the app.
+/// 
+/// Permissions requested:
+/// - photos/storage: For loading and saving images and audio files
+/// - audio/microphone: For audio playback and potential recording
+/// - camera: For taking pictures within the app
+/// 
+/// Logs a debug message if any permission is denied but continues execution.
 Future<void> _requestPermissions() async {
   final permissions = [
     Permission.photos,
@@ -37,7 +47,9 @@ Future<void> _requestPermissions() async {
 }
 
 /// Root widget of the application.
-/// Disables the debug banner and sets `Menu` as the home screen.
+/// 
+/// Configures the MaterialApp with debug banner disabled and
+/// sets Menu as the home screen.
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
