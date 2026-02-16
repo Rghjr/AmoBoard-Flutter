@@ -229,7 +229,7 @@ Configure individual sounds:
 
 **Krystian Strzępek**
 
-- GitHub: [@Rghjr](https://github.com/Rghjr)
+- GitHub: [Rghjr](https://github.com/Rghjr)
 - Email: krystianstk2000@gmail.com
 
 ---
