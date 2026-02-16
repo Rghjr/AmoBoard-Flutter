@@ -231,38 +231,11 @@ Configure individual sounds:
 
 ---
 
-## 🧪 Testing
-
-### Manual Testing Checklist
-- [ ] Create, edit, and delete panels
-- [ ] Add, edit, and delete sounds
-- [ ] Test drag & drop reordering
-- [ ] Verify audio playback and volume control
-- [ ] Test earrape mode toggle
-- [ ] Check audio clipping functionality
-- [ ] Verify file cleanup after deletions
-- [ ] Test color customization with lightness sliders
-- [ ] Confirm persistent storage across app restarts
-
----
-
 ## 🐛 Known Issues
 
 - Audio playback may be delayed on some older Android devices
 - Image cropper UI may not match system theme on all devices
 - File size limit (50MB) enforced for copied media
-
----
-
-## 🛣️ Roadmap
-
-- [ ] iOS support
-- [ ] Cloud backup/sync
-- [ ] Sound effects (pitch, speed, reverb)
-- [ ] Import/export soundboard configurations
-- [ ] Categorization and search
-- [ ] Widget support for quick sound access
-- [ ] Recording functionality
 
 ---
 
@@ -291,22 +264,11 @@ For inquiries regarding commercial use or licensing, please contact the author.
 
 ---
 
-## 🙏 Acknowledgments
-
-- Flutter team for the amazing framework
-- just_audio package maintainers
-- Hive database contributors
-- Icon assets from [your source]
-- Beta testers and feedback providers
-
----
-
 ## 📞 Support
 
 If you have questions or suggestions:
-1. Open an [issue](https://github.com/yourusername/soundboard-app/issues)
-2. Start a [discussion](https://github.com/yourusername/soundboard-app/discussions)
-3. Contact me directly via email
+1. Open an [issue](https://github.com/Rghjr/AmoBoard-Flutter/issues)
+2. Start a [discussion](https://github.com/Rghjr/AmoBoard-Flutter/discussions)
 
 ---
 
