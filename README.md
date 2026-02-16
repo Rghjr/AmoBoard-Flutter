@@ -252,8 +252,7 @@ For inquiries regarding commercial use or licensing, please contact the author.
 ## 📞 Support
 
 If you have questions or suggestions:
-1. Open an [issue](https://github.com/Rghjr/AmoBoard-Flutter/issues)
-2. Start a [discussion](https://github.com/Rghjr/AmoBoard-Flutter/discussions)
+Open an [issue](https://github.com/Rghjr/AmoBoard-Flutter/issues)
 
 ---
 
