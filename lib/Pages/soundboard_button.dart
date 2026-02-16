@@ -11,14 +11,11 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:just_audio/just_audio.dart';
 import '../Services/database_service.dart';
 
-/// Interactive sound button widget for soundboard grids.
+/// Interactive sound button widget used inside the soundboard.
 /// 
-/// Features:
-/// - Tap to play sound with configurable volume and clipping
-/// - Long-press to open editor overlay for customization
-/// - Custom colors with lightness adjustments
-/// - Icon and label display with error handling
-/// - Real-time preview of changes
+/// Supports tap to play and long-press to edit functionality.
+/// Handles icon display, color customization with lightness adjustments,
+/// and comprehensive error handling for all file operations.
 class SoundboardButton extends StatefulWidget {
   final Map<String, dynamic> data;
   final double borderRadius;
@@ -42,16 +39,12 @@ class SoundboardButton extends StatefulWidget {
 }
 
 class _SoundboardButtonState extends State<SoundboardButton> {
-  /// Plays the sound associated with this button.
-  /// 
-  /// Handles time-based clipping if start/end times are set.
-  /// Shows feedback snackbar on success or error.
   void _playSound() async {
     try {
       final path = widget.data['soundPath'];
 
       if (path != null && path.toString().isNotEmpty) {
-        // Get clip times in seconds
+        // Get start and end times for audio clip (in seconds)
         final startSeconds = widget.data['startTime'] ?? 0.0;
         final endSeconds = widget.data['endTime'];
         
@@ -90,7 +83,6 @@ class _SoundboardButtonState extends State<SoundboardButton> {
     }
   }
 
-  /// Opens the editor overlay for customizing this sound button.
   void _showEditor() {
     Navigator.of(context).push(PageRouteBuilder(
       opaque: false,
@@ -239,12 +231,8 @@ class _SoundboardButtonState extends State<SoundboardButton> {
 
 /// Modal overlay for editing sound button settings.
 /// 
-/// Provides controls for:
-/// - Icon and sound file selection
-/// - Color customization with lightness sliders
-/// - Volume and text size adjustment
-/// - Audio clipping (start/end time selection)
-/// - Real-time preview of changes
+/// Provides comprehensive controls for customizing appearance, audio,
+/// and playback settings with real-time preview and file validation.
 class _SoundEditorOverlay extends StatefulWidget {
   final Map<String, dynamic> data;
   final Function(Map<String, dynamic>) onSave;
@@ -277,7 +265,7 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
   // Sound clip settings (in seconds)
   double _startTime = 0.0;
   double _endTime = 0.0;
-  double _soundDuration = 0.0;
+  double _soundDuration = 0.0; // Total duration
   bool _isLoadingDuration = false;
 
   @override
@@ -305,7 +293,7 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
       _startTime = (widget.data['startTime'] != null ? (widget.data['startTime'] as num).toDouble() : 0.0);
       _endTime = (widget.data['endTime'] != null ? (widget.data['endTime'] as num).toDouble() : 0.0);
       
-      // Load sound duration if sound is already set
+      // If sound exists, load its duration
       if (_currentSoundPath.isNotEmpty) {
         _loadSoundDuration();
       }
@@ -326,7 +314,6 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
     }
   }
 
-  /// Opens image picker and cropper, then saves selected image.
   Future<void> _pickAndCropImage() async {
     try {
       final ImagePicker picker = ImagePicker();
@@ -367,7 +354,7 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
       );
 
       if (croppedFile != null) {
-        // Copy file to app directory
+        // Copy file to app directory for safe storage
         final copiedPath = await DatabaseService.copyFileToAppDir(croppedFile.path);
         
         if (copiedPath != null) {
@@ -392,7 +379,6 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
     }
   }
 
-  /// Opens file picker for MP3 files and saves selected sound.
   Future<void> _pickSound() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -414,7 +400,7 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
           return;
         }
         
-        // Copy file to app directory
+        // Copy file to app directory for safe storage
         final copiedPath = await DatabaseService.copyFileToAppDir(selectedPath);
         
         if (copiedPath != null) {
@@ -485,7 +471,7 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
       if (duration != null) {
         setState(() {
           _soundDuration = duration.inMilliseconds / 1000.0;
-          // Set default to full sound if no times are set
+          // If no times set, default to full sound duration
           if (_endTime == 0.0 || _endTime > _soundDuration) {
             _endTime = _soundDuration;
           }
@@ -510,7 +496,7 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
     }
   }
   
-  /// Tests sound playback with selected clip settings.
+  /// Tests sound playback with selected clip segment.
   void _testSound() {
     try {
       if (_currentSoundPath.isEmpty) return;
@@ -533,7 +519,6 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
     }
   }
 
-  /// Saves all changes and closes the editor.
   Future<void> _save() async {
     try {
       final updated = Map<String, dynamic>.from(widget.data);
@@ -560,7 +545,7 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
 
       widget.onSave(updated);
       
-      // Clean up old files
+      // Clean up old icon/mp3 if they were changed
       await DatabaseService.cleanUnusedFiles();
       
       if (mounted) {
@@ -576,7 +561,6 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
     }
   }
 
-  /// Creates a color selection button.
   Widget _colorButton(Color color, Function(Color) onTap) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2),
@@ -677,18 +661,42 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
                       spacing: 4,
                       runSpacing: 6,
                       children: [
-                        _colorButton(const Color.fromARGB(255, 0, 0, 0), (c) => setState(() => _baseBackgroundColor = c)),
-                        _colorButton(const Color.fromARGB(255, 255, 0, 0), (c) => setState(() => _baseBackgroundColor = c)),
-                        _colorButton(const Color.fromARGB(255, 255, 111, 0), (c) => setState(() => _baseBackgroundColor = c)),
-                        _colorButton(const Color.fromARGB(255, 255, 255, 0), (c) => setState(() => _baseBackgroundColor = c)),
-                        _colorButton(const Color.fromARGB(255, 0, 255, 0), (c) => setState(() => _baseBackgroundColor = c)),
-                        _colorButton(const Color.fromARGB(255, 0, 255, 255), (c) => setState(() => _baseBackgroundColor = c)),
-                        _colorButton(const Color.fromARGB(255, 0, 94, 255), (c) => setState(() => _baseBackgroundColor = c)),
-                        _colorButton(const Color.fromARGB(255, 132, 0, 255), (c) => setState(() => _baseBackgroundColor = c)),
-                        _colorButton(const Color.fromARGB(255, 255, 0, 255), (c) => setState(() => _baseBackgroundColor = c)),
-                        _colorButton(const Color.fromARGB(255, 75, 54, 33), (c) => setState(() => _baseBackgroundColor = c)),
-                        _colorButton(const Color.fromARGB(255, 156, 156, 156), (c) => setState(() => _baseBackgroundColor = c)),
-                        _colorButton(const Color.fromARGB(255, 255, 255, 255), (c) => setState(() => _baseBackgroundColor = c)),
+                        _colorButton(const Color.fromARGB(255, 0, 0, 0), (c) {
+                          setState(() => _baseBackgroundColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 255, 0, 0), (c) {
+                          setState(() => _baseBackgroundColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 255, 111, 0), (c) {
+                          setState(() => _baseBackgroundColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 255, 255, 0), (c) {
+                          setState(() => _baseBackgroundColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 0, 255, 0), (c) {
+                          setState(() => _baseBackgroundColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 0, 255, 255), (c) {
+                          setState(() => _baseBackgroundColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 0, 94, 255), (c) {
+                          setState(() => _baseBackgroundColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 132, 0, 255), (c) {
+                          setState(() => _baseBackgroundColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 255, 0, 255), (c) {
+                          setState(() => _baseBackgroundColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 75, 54, 33), (c) {
+                          setState(() => _baseBackgroundColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 156, 156, 156), (c) {
+                          setState(() => _baseBackgroundColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 255, 255, 255), (c) {
+                          setState(() => _baseBackgroundColor = c);
+                        }),
                       ],
                     ),
                   ),
@@ -713,18 +721,42 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
                       spacing: 4,
                       runSpacing: 6,
                       children: [
-                        _colorButton(const Color.fromARGB(255, 0, 0, 0), (c) => setState(() => _baseBorderColor = c)),
-                        _colorButton(const Color.fromARGB(255, 255, 0, 0), (c) => setState(() => _baseBorderColor = c)),
-                        _colorButton(const Color.fromARGB(255, 255, 111, 0), (c) => setState(() => _baseBorderColor = c)),
-                        _colorButton(const Color.fromARGB(255, 255, 255, 0), (c) => setState(() => _baseBorderColor = c)),
-                        _colorButton(const Color.fromARGB(255, 0, 255, 0), (c) => setState(() => _baseBorderColor = c)),
-                        _colorButton(const Color.fromARGB(255, 0, 255, 255), (c) => setState(() => _baseBorderColor = c)),
-                        _colorButton(const Color.fromARGB(255, 0, 94, 255), (c) => setState(() => _baseBorderColor = c)),
-                        _colorButton(const Color.fromARGB(255, 132, 0, 255), (c) => setState(() => _baseBorderColor = c)),
-                        _colorButton(const Color.fromARGB(255, 255, 0, 255), (c) => setState(() => _baseBorderColor = c)),
-                        _colorButton(const Color.fromARGB(255, 75, 54, 33), (c) => setState(() => _baseBorderColor = c)),
-                        _colorButton(const Color.fromARGB(255, 156, 156, 156), (c) => setState(() => _baseBorderColor = c)),
-                        _colorButton(const Color.fromARGB(255, 255, 255, 255), (c) => setState(() => _baseBorderColor = c)),
+                        _colorButton(const Color.fromARGB(255, 0, 0, 0), (c) {
+                          setState(() => _baseBorderColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 255, 0, 0), (c) {
+                          setState(() => _baseBorderColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 255, 111, 0), (c) {
+                          setState(() => _baseBorderColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 255, 255, 0), (c) {
+                          setState(() => _baseBorderColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 0, 255, 0), (c) {
+                          setState(() => _baseBorderColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 0, 255, 255), (c) {
+                          setState(() => _baseBorderColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 0, 94, 255), (c) {
+                          setState(() => _baseBorderColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 132, 0, 255), (c) {
+                          setState(() => _baseBorderColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 255, 0, 255), (c) {
+                          setState(() => _baseBorderColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 75, 54, 33), (c) {
+                          setState(() => _baseBorderColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 156, 156, 156), (c) {
+                          setState(() => _baseBorderColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 255, 255, 255), (c) {
+                          setState(() => _baseBorderColor = c);
+                        }),
                       ],
                     ),
                   ),
@@ -749,18 +781,42 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
                       spacing: 4,
                       runSpacing: 6,
                       children: [
-                        _colorButton(const Color.fromARGB(255, 0, 0, 0), (c) => setState(() => _baseTextColor = c)),
-                        _colorButton(const Color.fromARGB(255, 255, 0, 0), (c) => setState(() => _baseTextColor = c)),
-                        _colorButton(const Color.fromARGB(255, 255, 111, 0), (c) => setState(() => _baseTextColor = c)),
-                        _colorButton(const Color.fromARGB(255, 255, 255, 0), (c) => setState(() => _baseTextColor = c)),
-                        _colorButton(const Color.fromARGB(255, 0, 255, 0), (c) => setState(() => _baseTextColor = c)),
-                        _colorButton(const Color.fromARGB(255, 0, 255, 255), (c) => setState(() => _baseTextColor = c)),
-                        _colorButton(const Color.fromARGB(255, 0, 94, 255), (c) => setState(() => _baseTextColor = c)),
-                        _colorButton(const Color.fromARGB(255, 132, 0, 255), (c) => setState(() => _baseTextColor = c)),
-                        _colorButton(const Color.fromARGB(255, 255, 0, 255), (c) => setState(() => _baseTextColor = c)),
-                        _colorButton(const Color.fromARGB(255, 75, 54, 33), (c) => setState(() => _baseTextColor = c)),
-                        _colorButton(const Color.fromARGB(255, 156, 156, 156), (c) => setState(() => _baseTextColor = c)),
-                        _colorButton(const Color.fromARGB(255, 255, 255, 255), (c) => setState(() => _baseTextColor = c)),
+                        _colorButton(const Color.fromARGB(255, 0, 0, 0), (c) {
+                          setState(() => _baseTextColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 255, 0, 0), (c) {
+                          setState(() => _baseTextColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 255, 111, 0), (c) {
+                          setState(() => _baseTextColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 255, 255, 0), (c) {
+                          setState(() => _baseTextColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 0, 255, 0), (c) {
+                          setState(() => _baseTextColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 0, 255, 255), (c) {
+                          setState(() => _baseTextColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 0, 94, 255), (c) {
+                          setState(() => _baseTextColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 132, 0, 255), (c) {
+                          setState(() => _baseTextColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 255, 0, 255), (c) {
+                          setState(() => _baseTextColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 75, 54, 33), (c) {
+                          setState(() => _baseTextColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 156, 156, 156), (c) {
+                          setState(() => _baseTextColor = c);
+                        }),
+                        _colorButton(const Color.fromARGB(255, 255, 255, 255), (c) {
+                          setState(() => _baseTextColor = c);
+                        }),
                       ],
                     ),
                   ),
@@ -833,7 +889,7 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
                       child: Text(_currentSoundPath.split('/').last, style: const TextStyle(color: Colors.grey, fontSize: 9)),
                     ),
                   
-                  // Sound clip section (only shown when sound is selected)
+                  // Sound clip section - only shown when sound is selected
                   if (_currentSoundPath.isNotEmpty) ...[
                     const SizedBox(height: 16),
                     const Divider(color: Colors.grey),
@@ -893,7 +949,7 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
                       
                       const SizedBox(height: 4),
                       
-                      // Test button
+                      // Test playback button
                       Center(
                         child: ElevatedButton.icon(
                           onPressed: _testSound,
@@ -919,6 +975,8 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
                         onPressed: () async {
                           try {
                             widget.onDelete();
+                            
+                            // Clean up sound files
                             await DatabaseService.cleanUnusedFiles();
                             
                             if (mounted) {
@@ -937,6 +995,7 @@ class _SoundEditorOverlayState extends State<_SoundEditorOverlay> {
                         TextButton(
                           onPressed: () async {
                             try {
+                              // Clean up any copied files that weren't saved
                               await DatabaseService.cleanUnusedFiles();
                               
                               if (mounted) {
