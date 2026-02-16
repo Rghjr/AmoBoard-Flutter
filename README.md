@@ -130,20 +130,6 @@ See [`pubspec.yaml`](pubspec.yaml) for the complete dependency list.
 
 ---
 
-### **Platform-Specific Setup**
-
-#### Android
-Add permissions to `android/app/src/main/AndroidManifest.xml`:
-```xml
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-<uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
-<uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
-<uses-permission android:name="android.permission.CAMERA"/>
-```
-
----
-
 ## 📸 Screenshots
 
 ### App Icon
