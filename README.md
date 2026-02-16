@@ -229,9 +229,8 @@ Configure individual sounds:
 
 **Krystian Strzępek**
 
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your Profile](https://linkedin.com/in/yourprofile)
-- Email: your.email@example.com
+- GitHub: [@yourusername](https://github.com/Rghjr)
+- Email: krystianstk2000@gmail.com
 
 ---
 
