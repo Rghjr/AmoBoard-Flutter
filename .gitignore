@@ -5,7 +5,6 @@
 *.swp
 .DS_Store
 .atom/
-.build/
 .buildlog/
 .history
 .svn/
@@ -18,15 +17,14 @@ migrate_working_dir/
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# VS Code
+.vscode/
 
 # Flutter/Dart/Pub related
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
+.flutter-plugins
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
@@ -43,122 +41,50 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-android/app/src/main/AndroidManifest.xml
-android/app/src/main/res/drawable-hdpi/ic_launcher_foreground.png
-android/app/src/main/res/drawable-mdpi/ic_launcher_foreground.png
-android/app/src/main/res/drawable-xhdpi/ic_launcher_foreground.png
-android/app/src/main/res/drawable-xxhdpi/ic_launcher_foreground.png
-android/app/src/main/res/drawable-xxxhdpi/ic_launcher_foreground.png
-android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
-android/app/src/main/res/mipmap-hdpi/ic_launcher.png
-android/app/src/main/res/mipmap-mdpi/ic_launcher.png
-android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
-android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
-android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
-android/app/src/main/res/values/colors.xml
-ios/Runner.xcodeproj/project.pbxproj
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-50x50@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-50x50@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-57x57@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-57x57@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-72x72@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-72x72@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png
-ios/Runner/Info.plist
-linux/flutter/generated_plugins.cmake
-macos/Flutter/GeneratedPluginRegistrant.swift
+
+# Generated files
+*.g.dart
+*.freezed.dart
+*.gr.dart
+
+# Build outputs
+*.apk
+*.aab
+*.ipa
+
+# Generated plugin registrants
+**/generated_plugin_registrant.dart
+**/GeneratedPluginRegistrant.swift
+**/generated_plugin_registrant.cc
+**/generated_plugins.cmake
+
+# Lock files (can be regenerated)
 pubspec.lock
-web_entrypoint.dart
-windows/flutter/generated_plugin_registrant.cc
-windows/flutter/generated_plugins.cmake
-windows/flutter/generated_plugins.cmake
-windows/flutter/generated_plugin_registrant.cc
-pubspec.lock
-macos/Flutter/GeneratedPluginRegistrant.swift
-linux/flutter/generated_plugins.cmake
-ios/Runner/Info.plist
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json
-ios/Runner.xcodeproj/project.pbxproj
-android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
-android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
-android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
-android/app/src/main/res/mipmap-mdpi/ic_launcher.png
-android/app/src/main/res/mipmap-hdpi/ic_launcher.png
-android/app/src/main/AndroidManifest.xml
-android/app/src/main/AndroidManifest.xml
-android/app/src/main/res/mipmap-hdpi/ic_launcher.png
-android/app/src/main/res/mipmap-mdpi/ic_launcher.png
-android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
-android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
-android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
-ios/Runner.xcodeproj/project.pbxproj
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png
-windows/flutter/generated_plugins.cmake
-windows/flutter/generated_plugin_registrant.cc
-pubspec.lock
-macos/Flutter/GeneratedPluginRegistrant.swift
-linux/flutter/generated_plugins.cmake
-ios/Runner/Info.plist
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png
-ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json
-ios/Runner.xcodeproj/project.pbxproj
-android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
-android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
-android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
-android/app/src/main/res/mipmap-mdpi/ic_launcher.png
-android/app/src/main/res/mipmap-hdpi/ic_launcher.png
-android/app/src/main/AndroidManifest.xml
+
+# iOS specific (generated)
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# macOS specific (generated)
+**/macos/Flutter/GeneratedPluginRegistrant.swift
+**/macos/Flutter/ephemeral/
+
+# Linux specific (generated)
+**/linux/flutter/generated_plugin_registrant.cc
+**/linux/flutter/generated_plugins.cmake
+**/linux/flutter/ephemeral/
+
+# Windows specific (generated)
+**/windows/flutter/generated_plugin_registrant.cc
+**/windows/flutter/generated_plugins.cmake
+**/windows/flutter/ephemeral/
+
+# Web specific (generated)
+**/web/flutter_service_worker.js
+**/web/manifest.json
+**/web/version.json
