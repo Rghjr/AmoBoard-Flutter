@@ -130,37 +130,6 @@ See [`pubspec.yaml`](pubspec.yaml) for the complete dependency list.
 
 ---
 
-## 🚀 Installation & Setup
-
-### **Prerequisites**
-- Flutter SDK (3.0 or higher)
-- Dart SDK (3.0 or higher)
-- Android Studio or VS Code with Flutter extensions
-- Android device or emulator with audio support
-
-### **Installation Steps**
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/soundboard-app.git
-   cd soundboard-app
-   ```
-
-2. **Install dependencies**
-   ```bash
-   flutter pub get
-   ```
-
-3. **Generate Hive adapters** (if needed)
-   ```bash
-   flutter packages pub run build_runner build
-   ```
-
-4. **Run the app**
-   ```bash
-   flutter run
-   ```
-
 ### **Platform-Specific Setup**
 
 #### Android
