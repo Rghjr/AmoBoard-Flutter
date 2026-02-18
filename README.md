@@ -4,7 +4,7 @@
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
 ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 
-A feature-rich, fully customizable soundboard application built with **Flutter**. Create dynamic soundboards with custom sounds, icons, layouts, and real-time audio control — perfect for content creators, streamers, and audio enthusiasts.
+A feature-rich, fully customizable soundboard application built with **Flutter**. Create dynamic soundboards with custom sounds, icons, layouts, and real-time audio control.
 
 > **Note:** This project was created as a comprehensive mobile application, primarily written manually with minimal AI assistance for specific technical challenges.
 
@@ -15,7 +15,7 @@ A feature-rich, fully customizable soundboard application built with **Flutter**
 ### 🎛️ **Complete Customization**
 - **Visual Theming**: Customize background colors, borders, and text with fine-tuned lightness adjustments (-25% to +25%)
 - **Icon Selection**: Use bundled assets or select custom images from your device
-- **Layout Control**: Configure grid columns (1-4), button radius, and font sizes per panel
+- **Layout Control**: Configure grid columns (1-4), button radius, and font sizes
 
 ### 🔊 **Advanced Audio Engine**
 - **Volume Boosting**: Individual volume control per sound (0-200%+)
@@ -222,6 +222,7 @@ Configure individual sounds:
 - Audio playback may be delayed on some older Android devices
 - Image cropper UI may not match system theme on all devices
 - File size limit (50MB) enforced for copied media
+- On earrape, audio may slightly drift or feel subtly “pushed back” instead of staying perfectly in sync. This is caused by current playback handling limitations. A proper fix will be implemented once the required functionality is available in just_audio.
 
 ---
 
