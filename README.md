@@ -133,15 +133,15 @@ See [`pubspec.yaml`](pubspec.yaml) for the complete dependency list.
 ## 📸 Screenshots
 
 ### App Icon
-<img src="screenshots/android_logo.jpg" alt="App Logo" width="200"/>
+<img src="Sceenshots/7084fbec-ed98-4c62-8753-62cddefae67b.jpg" alt="App Logo" width="200"/>
 
 ### Main Menu
-<img src="screenshots/menu.jpg" alt="Main Menu" width="300"/>
+<img src="Sceenshots/Main Panel.jpg" alt="Main Menu" width="300"/>
 
 The main menu displays soundboard panels with custom icons and colors. Tap a panel to open its soundboard, long-press to edit, or use the **+** button to create new panels. Drag the handle on the right to reorder.
 
 ### Panel Editor
-<img src="screenshots/dodaj_nowy_przycisk.jpg" alt="Add New Panel" width="300"/>
+<img src="Sceenshots/Editing Panel.jpg" alt="Main Menu" width="300"/>
 
 Customize panel appearance:
 - Name and icon
@@ -150,7 +150,8 @@ Customize panel appearance:
 - Real-time color preview
 
 ### Soundboard View
-<img src="screenshots/dodaj_nowy_przycisk_do_panelu.jpg" alt="Soundboard" width="300"/>
+
+<img src="Sceenshots/Sound Panel.jpg" alt="Soundboard" width="300"/> <img src="Sceenshots/Soundboard.jpg" alt="Soundboard" width="300"/>
 
 Main soundboard interface:
 - **Earrape toggle** (top center) for global volume boost
@@ -161,7 +162,7 @@ Main soundboard interface:
 - Drag handles for reordering
 
 ### Sound Editor
-<img src="screenshots/edycja_dzwieku.jpg" alt="Edit Sound" width="300"/>
+<img src="Sceenshots/Sound Editing.jpg" alt="Soundboard" width="300"/> <img src="Sceenshots/Sound Editing 2.jpg" alt="Soundboard" width="300"/>
 
 Configure individual sounds:
 - Custom icon and label
